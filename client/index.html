@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Express Server</title>
+</head>
+<body>
+<h1>Hello World!!</h1>
+<p>
+  This a sample page for the static express server.
+</p>
+<ul>
+  <li><a href="/api/dummy">Sample JSON Endpoint</a></li>
+</ul>
+<form action="/api/dummy" method="post" id="form">
+  <label for="">
+    <span>Name</span>
+    <input type="text" required name="name"/>
+  </label>
+  <label for="">
+    <span>Email</span>
+    <input type="email" name="email"/>
+  </label>
+  <input type="submit" value="Submit"/>
+</form>
+<div class="result">
+
+</div>
+<script src="//code.jquery.com/jquery.min.js"></script>
+<script>
+  function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+  $(document).ready(() => {
+    const xcsrf = readCookie('ck');
+    $.ajaxSetup({
+      beforeSend: function(xhrObj, settings){
+
+      }
+    });
+    $('#form').on('submit', (e) => {
+      const form = $('#form');
+
+      e.preventDefault();
+      const data =form.serializeArray().reduce(function(obj, item) {
+          obj[item.name] = item.value;
+          return obj;
+      }, {});
+      data._csrf = xcsrf;
+      $.ajax({
+        url: form.attr('action'),
+        type: 'post',
+        data,
+      }).then((response) => {
+        console.log(response);
+      })
+    })
+  });
+</script>
+</body>
+</html>
