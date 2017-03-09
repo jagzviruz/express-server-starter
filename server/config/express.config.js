@@ -1,17 +1,14 @@
 'use strict';
 
 import compression from 'compression';
-import csrf from 'csurf';
 import lusca from 'lusca';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
 //import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import cookieSession from 'cookie-session';
 import uuid from 'uuid';
-import shortid from 'shortid';
-
+import express from 'express';
 
 /**
  * This function is for setting up the configuration of the Express instance.
@@ -35,7 +32,7 @@ export default function(app) {
   app.use(helmet());
   app.use(compression());
   app.use(morgan('[:date[iso]] :date[web] :remote-addr - :remote-user :method :url :status[pretty] :response-time'));
-
+  app.use(express.static(app.get('appPath')));
   // trust first proxy
   app.set('trust proxy', 1);
 
@@ -46,7 +43,7 @@ export default function(app) {
 
 
   if(env !== 'test') {
-    console.log("Setting up lusca middleware");
+    console.log('Setting up lusca middleware');
     // Lusca can be initialized only after a session middleware is added.
     app.use(lusca({
       csrf: true,

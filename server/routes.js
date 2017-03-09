@@ -18,6 +18,9 @@ module.exports = exports = function(app) {
     }, pathfinderUI.router);
   }
 
+  /*app.use('/js', express.static(path.resolve(`${app.get('appPath')}/js`)));*/
+
+
   // If it does not match any of the above routes, map to this
   app.route('/*')
     .get((req, res) => {
